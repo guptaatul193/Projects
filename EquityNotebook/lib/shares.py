@@ -2,9 +2,9 @@ import os
 import json
 from collections import defaultdict
 from datetime import datetime,date
+from lib import trans
 
 shares_path = "data/shares.json"
-tran_path = "data/transactions.csv"
 
 def gulpShares():
 	try:
@@ -30,11 +30,7 @@ def addShares( nm, mkt, cost, qty, dt ):
 		shares[t][str(cost)] += qty
 	shares[t] = {i:shares[t][i] for i in sorted(shares[t])}
 	refreshSharesFile( shares )
-	logTransactions('BUY',dt,nm,mkt,qty,cost)
-
-def logTransactions(typ,dt,nm,mkt,qty,cost):
-	with open(tran_path, 'a') as f:
-		f.write("%s,%s,%s,%s,%d,%.2f,%.2f\n" %(typ,dt,nm,mkt,qty,cost,(qty*cost)))
+	trans.logTransactions('BUY',dt,nm,mkt,qty,cost)
 
 def removeShares( nm, mkt, cost, qty, dt ):
 	if dt.lower() == 'today':
@@ -61,5 +57,5 @@ def removeShares( nm, mkt, cost, qty, dt ):
 		shares[t] = {i:shares[t][i] for i in shares[t] if shares[t][i] != 0}
 	refreshSharesFile(shares)
 	for i in rm:
-		logTransactions('SELL',dt,nm,mkt,rm[i],float(i))
-	return rm
+		trans.logTransactions('SELL',dt,nm,mkt,rm[i],float(cost))
+		trans.logProfitLoss(dt,nm,mkt,float(i),float(cost),rm[i])
