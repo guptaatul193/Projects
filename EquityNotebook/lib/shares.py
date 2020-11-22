@@ -1,4 +1,3 @@
-import os
 import json
 from collections import defaultdict
 from datetime import datetime,date
@@ -9,7 +8,8 @@ shares_path = "data/shares.json"
 def gulpShares():
 	try:
 		with open(shares_path,'r') as f:
-			shares = defaultdict(lambda:defaultdict(lambda:0),json.load(f))
+			t = json.load(f)
+		shares = defaultdict(lambda:defaultdict(lambda:0),{i:t[i] for i in sorted(t)})
 	except:
 		return defaultdict(lambda:defaultdict(lambda:0))
 	return shares
@@ -18,7 +18,7 @@ def refreshSharesFile(shares):
 	with open(shares_path,'w') as f:
 		f.write(json.dumps(shares,indent=4))
 
-def addShares( nm, mkt, cost, qty, dt ):
+def buyShares( nm, mkt, cost, qty, dt ):
 	if dt.lower() == 'today':
 		dt = datetime.strftime(date.today(),'%Y-%m-%d')
 	t = '%s|%s' %(nm,mkt)
@@ -32,7 +32,7 @@ def addShares( nm, mkt, cost, qty, dt ):
 	refreshSharesFile( shares )
 	trans.logTransactions('BUY',dt,nm,mkt,qty,cost)
 
-def removeShares( nm, mkt, cost, qty, dt ):
+def sellShares( nm, mkt, cost, qty, dt ):
 	if dt.lower() == 'today':
 		dt = datetime.strftime(date.today(),'%Y-%m-%d')
 	t = '%s|%s' %(nm,mkt)
