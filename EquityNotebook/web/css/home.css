@@ -1,0 +1,20 @@
+body{
+	font-family: 'Amatic SC', cursive;
+	background-color: #2d4c7d;
+	color: white;
+	border: 30px solid black;
+	border-radius: 15px;
+}
+
+form{
+	text-align: center;
+	margin-bottom: 30px;
+}
+
+.choice{
+	background-color: #ff9f1c;
+	height: 40px;
+	font-size: 1.5em;
+	margin: 4px;
+	border-radius: 15px;
+}
